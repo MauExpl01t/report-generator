@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Informe de seguridad - www.ejemplo.com</title>
+<style>
+:root{--bg:#f4f6fb;--surface:#ffffff;--surface-2:#eef2f9;--text:#0f172a;--muted:#55607a;--line:#e1e6f0;
+--link:#1d4ed8;--ok:#15803d;--ok-bg:#e3f4ea;
+--sev-critical:#991b1b;--sev-critical-bg:#fbdcdc;--sev-high:#c0262d;--sev-high-bg:#fde8e8;
+--sev-medium:#b45309;--sev-medium-bg:#ffedd5;--sev-low:#8a6a06;--sev-low-bg:#fef3c7;
+--sev-info:#475569;--sev-info-bg:#e8edf3;--shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);--accent:#2563eb;}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1020;--surface:#141b2e;--surface-2:#1a2340;--text:#e8edf8;--muted:#a0acc5;--line:#263150;
+--link:#8ab4ff;--ok:#4ade80;--ok-bg:#11301f;
+--sev-critical:#fca5a5;--sev-critical-bg:#4a1d1d;--sev-high:#f87171;--sev-high-bg:#43201f;
+--sev-medium:#fb923c;--sev-medium-bg:#43280f;--sev-low:#facc15;--sev-low-bg:#3b3210;
+--sev-info:#a9b6cc;--sev-info-bg:#1f2a3d;--shadow:0 1px 2px rgba(0,0,0,.4);}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link)}
+h1,h2,h3,h4{line-height:1.25;margin:0}
+h2{font-size:1.3rem;margin-bottom:.35rem}
+.sec-lead{color:var(--muted);margin:0 0 1rem;max-width:70ch}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.top{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#000));color:#fff;padding:28px 0 32px}
+.top-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{max-height:48px;max-width:160px;background:#fff;border-radius:8px;padding:6px}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.top h1{font-size:clamp(1.5rem,3.5vw,2.2rem);margin-top:4px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;font-size:.92rem;opacity:.95}
+.meta b{font-weight:600}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:.88rem;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);
+border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.28)}
+nav.sticky{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.sticky .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.sticky a{padding:12px 12px;text-decoration:none;color:var(--muted);font-size:.9rem;white-space:nowrap}
+nav.sticky a:hover{color:var(--text)}
+main{margin-top:24px;padding-bottom:40px}
+section{margin-top:28px;scroll-margin-top:56px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.hero{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.gauge-card{text-align:center}
+.gauge{width:190px;height:190px}
+.g-track{fill:none;stroke:var(--line);stroke-width:12}
+.g-val{fill:none;stroke-width:12;stroke-linecap:round}
+.g-num{font-size:40px;font-weight:700;text-anchor:middle;fill:var(--text)}
+.g-sub{font-size:11px;text-anchor:middle;fill:var(--muted)}
+.grade{display:inline-block;margin-top:6px;padding:4px 14px;border-radius:999px;font-weight:700;color:#fff}
+.note{color:var(--muted);font-size:.82rem;margin:10px 0 0}
+.summary-card p{margin:.4rem 0}
+.urgent-list{margin:.6rem 0 0;padding-left:1.2rem}
+.urgent-list li{margin:.2rem 0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.kpi{padding:16px}
+.kpi .n{font-size:2rem;font-weight:700;line-height:1.1}
+.kpi .l{font-weight:600;margin-top:2px}
+.kpi .s{color:var(--muted);font-size:.84rem}
+.two{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:16px}
+.bar-row{display:grid;grid-template-columns:86px 1fr 28px;gap:10px;align-items:center;margin:10px 0;font-size:.92rem}
+.bar{height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px}
+.bar-n{text-align:right;font-weight:600}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.cat{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.cat svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cat-h{display:flex;gap:8px;align-items:center;font-weight:600;font-size:.95rem}
+.cat p{color:var(--muted);font-size:.8rem;margin:6px 0 8px}
+.pill{display:inline-block;font-size:.76rem;font-weight:600;border-radius:999px;padding:2px 10px}
+.pill.ok{color:var(--ok);background:var(--ok-bg)}
+.pill.na{color:var(--sev-info);background:var(--sev-info-bg)}
+.good{display:flex;flex-wrap:wrap;gap:8px}
+.good .pill{font-size:.86rem;padding:5px 12px}
+.plan{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plan-col{border-top:5px solid var(--c);padding:16px}
+.plan-col h3{font-size:1.05rem}
+.plan-col h3 small{display:block;color:var(--muted);font-weight:400;font-size:.8rem}
+.plan-col ol{margin:.8rem 0 0;padding:0;list-style:none}
+.plan-col li{padding:10px 0;border-top:1px solid var(--line)}
+.plan-col li:first-child{border-top:0}
+.plan-col a{font-weight:600;text-decoration:none}
+.plan-col a:hover{text-decoration:underline}
+.empty{color:var(--muted);font-size:.9rem;margin:.8rem 0 0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:.74rem;color:var(--muted);background:var(--surface-2);border-radius:6px;padding:2px 8px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.chip{font:inherit;font-size:.86rem;border:1px solid var(--line);background:var(--surface);color:var(--text);
+border-radius:999px;padding:5px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--text);color:var(--bg);border-color:var(--text)}
+details.finding{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);
+border-radius:12px;margin:10px 0;box-shadow:var(--shadow)}
+details.finding>summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px}
+details.finding>summary::-webkit-details-marker{display:none}
+details.finding>summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2px solid var(--muted);
+border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s;flex:none}
+details.finding[open]>summary::after{transform:rotate(-135deg)}
+.sev{flex:none;font-size:.76rem;font-weight:700;border-radius:6px;padding:3px 9px;color:var(--c);background:var(--cb)}
+.f-title{font-weight:600}
+.f-cat{color:var(--muted);font-size:.8rem;margin-left:4px}
+.f-body{padding:0 16px 16px}
+.f-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.f-block{background:var(--surface-2);border-radius:10px;padding:12px 14px}
+.f-block h4{font-size:.84rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.f-block p{margin:0;font-size:.95rem}
+.f-block.fix{background:var(--ok-bg)}
+.f-block.fix h4{color:var(--ok)}
+details.tech{margin-top:12px;border:1px dashed var(--line);border-radius:10px;padding:8px 14px}
+details.tech summary{cursor:pointer;font-size:.88rem;color:var(--muted)}
+details.tech dl{margin:10px 0 0;font-size:.9rem}
+details.tech dt{font-weight:600;margin-top:8px}
+details.tech dd{margin:2px 0 0}
+pre{background:var(--surface-2);padding:10px;border-radius:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;margin:0;font-size:.84rem}
+.code{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;color:var(--muted)}
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.scope ul{margin:.5rem 0 0;padding-left:1.2rem}
+.scope li{margin:.35rem 0;font-size:.94rem}
+.warn{border-left:5px solid var(--sev-medium);background:var(--sev-medium-bg);border-radius:10px;padding:10px 14px;margin-top:14px;font-size:.9rem}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.gloss div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.9rem}
+.gloss b{display:block}
+footer{margin-top:36px;padding:20px 0 40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+@media screen and (max-width:900px){
+ .hero,.two,.scope{grid-template-columns:1fr}
+ .kpis{grid-template-columns:repeat(2,1fr)}
+ .plan,.f-grid{grid-template-columns:1fr}
+}
+@page{size:A4;margin:10mm}
+@media print{
+ :root{--bg:#f4f6fb;--surface:#ffffff;--surface-2:#eef2f9;--text:#0f172a;--muted:#55607a;--line:#e1e6f0;
+--link:#1d4ed8;--ok:#15803d;--ok-bg:#e3f4ea;
+--sev-critical:#991b1b;--sev-critical-bg:#fbdcdc;--sev-high:#c0262d;--sev-high-bg:#fde8e8;
+--sev-medium:#b45309;--sev-medium-bg:#ffedd5;--sev-low:#8a6a06;--sev-low-bg:#fef3c7;
+--sev-info:#475569;--sev-info-bg:#e8edf3;--shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);}
+ body{background:#fff;font-size:12px}
+ .hero{grid-template-columns:230px 1fr}
+ .two{grid-template-columns:260px 1fr}
+ .gauge{width:150px;height:150px}
+ .cats{grid-template-columns:repeat(2,1fr)}
+ .f-block p{font-size:.9rem}
+ .tools,nav.sticky,.filters{display:none!important}
+ .top{padding-bottom:24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ main{margin-top:12px}
+ .card,details.finding{box-shadow:none}
+ .kpi,.cat,details.finding,.plan-col li,.gloss div,.bar-row{break-inside:avoid}
+ h2,h3{break-after:avoid}
+ .plan{break-inside:avoid}
+ .f-body{padding:0 12px 12px}
+ details.finding>summary{padding:10px 12px}
+ details.tech dt{margin-top:4px}
+ details.tech{margin-top:8px;padding:6px 12px}
+ details.finding{margin:8px 0}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ section{margin-top:20px}
+}
+</style></head>
+<body>
+<header class="top"><div class="wrap">
+ <div class="top-row">
+  <div class="brand"><div><div class="eyebrow">Informe de seguridad web</div><h1>www.ejemplo.com</h1></div></div>
+  <div class="tools" hidden><button class="btn" id="toggle-all" type="button">Expandir todo</button>
+  <button class="btn" id="print-btn" type="button">Imprimir / guardar PDF</button></div>
+ </div>
+ <div class="meta"><span><b>Cliente:</b> Tienda Ejemplo SpA</span><span><b>Sitio:</b> https://www.ejemplo.com/</span><span><b>Fecha:</b> 9 de noviembre de 2026</span><span><b>Preparado por:</b> Tu Nombre o Empresa</span></div>
+</div></header>
+<nav class="sticky" aria-label="Secciones"><div class="wrap">
+ <a href="#resumen">Resumen</a><a href="#plan">Plan de acción</a><a href="#hallazgos">Hallazgos</a>
+ <a href="#alcance">Alcance</a><a href="#glosario">Glosario</a>
+</div></nav>
+<main><div class="wrap">
+<section id="resumen" style="margin-top:0">
+ <div class="hero">
+  <div class="card gauge-card"><svg class="gauge" viewBox="0 0 140 140" role="img" aria-label="Puntaje 40 de 100"><circle class="g-track" cx="70" cy="70" r="54"/><circle class="g-val" cx="70" cy="70" r="54" transform="rotate(-90 70 70)" style="stroke:var(--sev-medium);stroke-dasharray:339.3;stroke-dashoffset:203.6"/><text class="g-num" x="70" y="76">40</text><text class="g-sub" x="70" y="94">de 100</text></svg>
+   <div><span class="grade" style="background:var(--sev-medium)">Riesgoso</span></div>
+   <p class="note">Puntaje de seguridad, de 0 a 100. Es orientativo y sirve para priorizar.</p></div>
+  <div class="card summary-card"><h2>Resumen para la gerencia</h2>
+   <p>Realizamos un análisis pasivo: observamos cómo responde el sitio, sin intentar vulnerarlo sobre <b>www.ejemplo.com</b>. El resultado general es <b>riesgoso</b> (40/100). Hay problemas que un atacante podría aprovechar.</p><p>Detectamos <b>13 puntos</b> a revisar, de los cuales <b>1</b> es urgente. Buena noticia: <b>10</b> se pueden resolver en pocos minutos.</p><p style="margin-top:.8rem"><b>Lo primero que hay que atender:</b></p><ul class="urgent-list"><li>Certificado TLS vencido</li></ul></div>
+ </div>
+ <div class="kpis">
+  <div class="card kpi"><div class="n">13</div><div class="l">Puntos a revisar</div><div class="s">en total, de todas las severidades</div></div>
+  <div class="card kpi"><div class="n" style="color:var(--sev-critical)">1</div><div class="l">Urgentes</div><div class="s">severidad crítica o alta</div></div>
+  <div class="card kpi"><div class="n">10</div><div class="l">Arreglos rápidos</div><div class="s">se resuelven en minutos</div></div>
+  <div class="card kpi"><div class="n">8</div><div class="l">Controles ejecutados</div><div class="s">áreas de seguridad revisadas</div></div>
+ </div>
+</section>
+<section>
+ <div class="two">
+  <div class="card"><h2>Por severidad</h2><p class="sec-lead">Cuántos puntos hay según qué tan grave es cada uno.</p><div class="bar-row"><span>Crítica</span><div class="bar"><i style="width:0%;background:var(--sev-critical)"></i></div><span class="bar-n">0</span></div><div class="bar-row"><span>Alta</span><div class="bar"><i style="width:20%;background:var(--sev-high)"></i></div><span class="bar-n">1</span></div><div class="bar-row"><span>Media</span><div class="bar"><i style="width:100%;background:var(--sev-medium)"></i></div><span class="bar-n">5</span></div><div class="bar-row"><span>Baja</span><div class="bar"><i style="width:100%;background:var(--sev-low)"></i></div><span class="bar-n">5</span></div><div class="bar-row"><span>Informativo</span><div class="bar"><i style="width:40%;background:var(--sev-info)"></i></div><span class="bar-n">2</span></div></div>
+  <div class="card"><h2>Por área</h2><p class="sec-lead">Estado de cada área de seguridad revisada.</p><div class="cats"><div class="cat"><div class="cat-h" style="color:var(--sev-high)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span style="color:var(--text)">Conexión segura (HTTPS)</span></div><p>Que lo que viaja entre tus visitantes y el sitio vaya cifrado, y que el sitio sea auténtico.</p><div class="bar" style="margin-bottom:8px"><i style="width:78%;background:var(--sev-high)"></i></div><span class="pill" style="color:var(--sev-high);background:var(--sev-high-bg)">2 puntos a revisar</span></div><div class="cat"><div class="cat-h" style="color:var(--sev-medium)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg><span style="color:var(--text)">Escudos del navegador</span></div><p>Instrucciones que el sitio le da al navegador para defenderse de ataques comunes.</p><div class="bar" style="margin-bottom:8px"><i style="width:73%;background:var(--sev-medium)"></i></div><span class="pill" style="color:var(--sev-medium);background:var(--sev-medium-bg)">7 puntos a revisar</span></div><div class="cat"><div class="cat-h" style="color:var(--sev-low)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1"/><circle cx="14" cy="14" r="1"/><circle cx="15" cy="9" r="1"/></svg><span style="color:var(--text)">Sesiones y cookies</span></div><p>Cómo se protegen los datos que recuerdan quién es cada visitante.</p><div class="bar" style="margin-bottom:8px"><i style="width:96%;background:var(--sev-low)"></i></div><span class="pill" style="color:var(--sev-low);background:var(--sev-low-bg)">2 puntos a revisar</span></div><div class="cat"><div class="cat-h" style="color:var(--ok)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span style="color:var(--text)">Acceso desde otros sitios</span></div><p>Qué otras páginas web pueden pedirle datos a tu sitio.</p><div class="bar" style="margin-bottom:8px"><i style="width:100%;background:var(--ok)"></i></div><span class="pill ok">Sin problemas</span></div><div class="cat"><div class="cat-h" style="color:var(--ok)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span style="color:var(--text)">Contenido y formularios</span></div><p>Cómo está construida la página: formularios, scripts externos y datos visibles en el código.</p><div class="bar" style="margin-bottom:8px"><i style="width:100%;background:var(--ok)"></i></div><span class="pill ok">Sin problemas</span></div><div class="cat"><div class="cat-h" style="color:var(--sev-medium)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span style="color:var(--text)">Correo y dominio</span></div><p>Que nadie pueda enviar correos falsos haciéndose pasar por tu empresa.</p><div class="bar" style="margin-bottom:8px"><i style="width:93%;background:var(--sev-medium)"></i></div><span class="pill" style="color:var(--sev-medium);background:var(--sev-medium-bg)">1 punto a revisar</span></div><div class="cat"><div class="cat-h" style="color:var(--sev-info)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="color:var(--text)">Archivos expuestos</span></div><p>Archivos internos que no deberían poder verse desde internet.</p><div class="bar" style="margin-bottom:8px"><i style="width:100%;background:var(--sev-info)"></i></div><span class="pill" style="color:var(--sev-info);background:var(--sev-info-bg)">1 punto a revisar</span></div></div></div>
+ </div>
+</section>
+<section><h2>Lo que está bien</h2><p class="sec-lead">Áreas revisadas donde no encontramos problemas.</p><div class="good"><span class="pill ok">Acceso desde otros sitios</span><span class="pill ok">Contenido y formularios</span></div></section>
+<section id="plan"><h2>Plan de acción</h2>
+ <p class="sec-lead">Qué corregir y en qué orden. Dentro de cada grupo, lo más rápido de resolver va primero.
+ Haz clic en un punto para ver su explicación.</p>
+ <div class="plan"><div class="card plan-col" style="--c:var(--sev-critical)"><h3>Urgente<small>esta semana</small></h3><ol><li><a href="#f-1">Certificado TLS vencido</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li></ol></div><div class="card plan-col" style="--c:var(--sev-medium)"><h3>Importante<small>durante este mes</small></h3><ol><li><a href="#f-2">Sin registro DMARC</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el dominio y el correo</span></div></li><li><a href="#f-3">Sin protección contra clickjacking</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-5">Falta Strict-Transport-Security (HSTS)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-6">HTTP no redirige a HTTPS</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-4">Falta Content-Security-Policy (CSP)</a><div class="tags"><span class="tag">Mayor · días</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></li></ol></div><div class="card plan-col" style="--c:var(--sev-info)"><h3>Mejora continua<small>cuando haya oportunidad</small></h3><ol><li><a href="#f-7">Cookie sin atributo HttpOnly</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></li><li><a href="#f-8">Cookie sin atributo SameSite</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></li><li><a href="#f-9">Divulgación de tecnología en Server</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-10">Falta X-Content-Type-Options: nosniff</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-11">Falta Referrer-Policy</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-12">Sin security.txt</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></li><li><a href="#f-13">Falta Permissions-Policy</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li></ol></div></div></section>
+<section id="hallazgos"><h2>Detalle de hallazgos</h2>
+ <p class="sec-lead">Cada punto explica qué significa, por qué importa y cómo se corrige, sin tecnicismos.
+ El detalle técnico está al final de cada uno, para quien lo implemente.</p>
+ <div class="filters" role="group" aria-label="Filtrar por severidad"><button class="chip" data-filter="ALL" aria-pressed="true">Todos (13)</button><button class="chip" data-filter="HIGH" aria-pressed="false">Alta (1)</button><button class="chip" data-filter="MEDIUM" aria-pressed="false">Media (5)</button><button class="chip" data-filter="LOW" aria-pressed="false">Baja (5)</button><button class="chip" data-filter="INFO" aria-pressed="false">Informativo (2)</button></div>
+ <details class="finding" id="f-1" data-sev="HIGH" style="--c:var(--sev-high);--cb:var(--sev-high-bg)"><summary><span class="sev">Alta</span><span><span class="f-title">Certificado TLS vencido</span><span class="f-cat"> · Conexión segura (HTTPS)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El certificado de seguridad del sitio ya venció, como un documento de identidad caducado.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Los navegadores bloquean o advierten al visitante al entrar, se pierde confianza y ventas, y el sitio puede dejar de funcionar para integraciones.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Renovar el certificado hoy mismo y activar la renovación automática para que no vuelva a ocurrir.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Venció el 2026-11-01.</dd><dt>Recomendación técnica</dt><dd>Renueva el certificado.</dd><dt>Más información</dt><dd><a href="https://developer.mozilla.org/es/docs/Web/Security/Transport_Layer_Security" rel="noopener noreferrer" target="_blank">https://developer.mozilla.org/es/docs/Web/Security/Transport_Layer_Security</a></dd><dt>Identificador</dt><dd><span class="code">tls.expired</span></dd></dl></details></div></details><details class="finding" id="f-2" data-sev="MEDIUM" style="--c:var(--sev-medium);--cb:var(--sev-medium-bg)"><summary><span class="sev">Media</span><span><span class="f-title">Sin registro DMARC</span><span class="f-cat"> · Correo y dominio</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El dominio no indica qué hacer con correos que dicen ser tuyos pero no lo son.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Los estafadores pueden enviar correos falsos con tu nombre a tus clientes sin que los servidores los frenen.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Publicar un registro DMARC; empezar en modo monitoreo y subir gradualmente la exigencia.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el dominio y el correo</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No se encontró un registro TXT en _dmarc.ejemplo.com.</dd><dt>Recomendación técnica</dt><dd>Publica un registro DMARC, comenzando con p=none y subiendo gradualmente.</dd><dt>Identificador</dt><dd><span class="code">dns.dmarc_missing</span></dd></dl></details></div></details><details class="finding" id="f-3" data-sev="MEDIUM" style="--c:var(--sev-medium);--cb:var(--sev-medium-bg)"><summary><span class="sev">Media</span><span><span class="f-title">Sin protección contra clickjacking</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Otra página podría mostrar tu sitio escondido dentro de la suya para engañar a los usuarios y hacerles hacer clic donde no quieren (clickjacking).</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Un visitante podría, sin saberlo, aprobar una compra, un cambio de datos o un permiso.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Agregar la cabecera X-Frame-Options o la directiva frame-ancestors en la política CSP.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No hay X-Frame-Options ni frame-ancestors en la CSP.</dd><dt>Recomendación técnica</dt><dd>Agrega X-Frame-Options: DENY o la directiva frame-ancestors &#x27;none&#x27;.</dd><dt>Identificador</dt><dd><span class="code">headers.clickjacking</span></dd></dl></details></div></details><details class="finding" id="f-4" data-sev="MEDIUM" style="--c:var(--sev-medium);--cb:var(--sev-medium-bg)"><summary><span class="sev">Media</span><span><span class="f-title">Falta Content-Security-Policy (CSP)</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El sitio no define una &#x27;lista de invitados&#x27; de qué scripts y recursos puede cargar.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Si un atacante lograra insertar código malicioso en la página, el navegador lo ejecutaría sin cuestionarlo (robo de datos, formularios falsos).</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Definir una política Content-Security-Policy que permita solo los orígenes que el sitio realmente usa.</p><div class="tags"><span class="tag">Mayor · días</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No se envía Content-Security-Policy.</dd><dt>Recomendación técnica</dt><dd>Define una CSP restrictiva que limite los orígenes de scripts y recursos.</dd><dt>Más información</dt><dd><a href="https://developer.mozilla.org/es/docs/Web/HTTP/CSP" rel="noopener noreferrer" target="_blank">https://developer.mozilla.org/es/docs/Web/HTTP/CSP</a></dd><dt>Identificador</dt><dd><span class="code">headers.csp</span></dd></dl></details></div></details><details class="finding" id="f-5" data-sev="MEDIUM" style="--c:var(--sev-medium);--cb:var(--sev-medium-bg)"><summary><span class="sev">Media</span><span><span class="f-title">Falta Strict-Transport-Security (HSTS)</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El sitio no le indica al navegador que debe usar SIEMPRE la conexión segura.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Un atacante en la misma red WiFi podría forzar una conexión sin cifrar la primera vez que alguien visita.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Agregar la cabecera Strict-Transport-Security con una duración larga (por ejemplo, un año).</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>La respuesta no incluye la cabecera Strict-Transport-Security.</dd><dt>Recomendación técnica</dt><dd>Agrega &#x27;Strict-Transport-Security: max-age=31536000; includeSubDomains&#x27;.</dd><dt>Más información</dt><dd><a href="https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Strict-Transport-Security" rel="noopener noreferrer" target="_blank">https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Strict-Transport-Security</a></dd><dt>Identificador</dt><dd><span class="code">headers.hsts</span></dd></dl></details></div></details><details class="finding" id="f-6" data-sev="MEDIUM" style="--c:var(--sev-medium);--cb:var(--sev-medium-bg)"><summary><span class="sev">Media</span><span><span class="f-title">HTTP no redirige a HTTPS</span><span class="f-cat"> · Conexión segura (HTTPS)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Quien escribe la dirección sin &#x27;https&#x27; entra a una versión sin cifrar del sitio.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Esas visitas viajan sin protección: en una red WiFi pública alguien podría ver o alterar lo que hacen.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Configurar una redirección automática de http:// a https:// en todo el sitio.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>http://www.ejemplo.com/ responde 200 sin redirigir a HTTPS.</dd><dt>Evidencia</dt><dd><pre>GET http://www.ejemplo.com/ -&gt; 200</pre></dd><dt>Recomendación técnica</dt><dd>Configura una redirección 301 de HTTP a HTTPS.</dd><dt>Identificador</dt><dd><span class="code">transport.no_redirect</span></dd></dl></details></div></details><details class="finding" id="f-7" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">Cookie sin atributo HttpOnly</span><span class="f-cat"> · Sesiones y cookies</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Los scripts de la página pueden leer las cookies de sesión.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Si algún script malicioso se colara, podría robar la sesión del usuario.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Marcar las cookies de sesión con el atributo HttpOnly.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>La cookie &#x27;sessionid&#x27; no tiene HttpOnly.</dd><dt>Evidencia</dt><dd><pre>Set-Cookie: sessionid=...; Path=/</pre></dd><dt>Recomendación técnica</dt><dd>Agrega el atributo HttpOnly a las cookies de sesión.</dd><dt>Identificador</dt><dd><span class="code">cookies.httponly</span></dd></dl></details></div></details><details class="finding" id="f-8" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">Cookie sin atributo SameSite</span><span class="f-cat"> · Sesiones y cookies</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Las cookies no indican si pueden enviarse cuando la petición viene desde otro sitio.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Facilita ataques en los que otra web hace acciones en nombre del usuario (CSRF).</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Definir el atributo SameSite (Lax o Strict) en las cookies.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>La cookie &#x27;sessionid&#x27; no define SameSite.</dd><dt>Evidencia</dt><dd><pre>Set-Cookie: sessionid=...; Path=/</pre></dd><dt>Recomendación técnica</dt><dd>Define SameSite=Lax o Strict.</dd><dt>Identificador</dt><dd><span class="code">cookies.samesite</span></dd></dl></details></div></details><details class="finding" id="f-9" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">Divulgación de tecnología en Server</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El servidor anuncia con qué tecnología y versión está hecho, como dejar un letrero con el modelo de tu cerradura.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Facilita a un atacante buscar fallas conocidas de esa versión exacta.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Ocultar o simplificar esa cabecera en la configuración del servidor.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>La cabecera Server revela la tecnología y versión.</dd><dt>Evidencia</dt><dd><pre>Server: Apache/2.4.41 (Ubuntu)</pre></dd><dt>Recomendación técnica</dt><dd>Oculta o genericiza la cabecera.</dd><dt>Identificador</dt><dd><span class="code">headers.disclosure.server</span></dd></dl></details></div></details><details class="finding" id="f-10" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">Falta X-Content-Type-Options: nosniff</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El navegador puede &#x27;adivinar&#x27; el tipo de un archivo en lugar de confiar en lo que dice el servidor.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Un archivo subido como imagen podría llegar a ejecutarse como script.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Agregar la cabecera X-Content-Type-Options con el valor nosniff.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No se envía X-Content-Type-Options.</dd><dt>Recomendación técnica</dt><dd>Agrega &#x27;X-Content-Type-Options: nosniff&#x27;.</dd><dt>Identificador</dt><dd><span class="code">headers.nosniff</span></dd></dl></details></div></details><details class="finding" id="f-11" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">Falta Referrer-Policy</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Al hacer clic en un enlace externo, el sitio le cuenta al destino exactamente de qué página venía.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Pueden filtrarse direcciones internas o datos incluidos en la URL.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Agregar la cabecera Referrer-Policy (por ejemplo, strict-origin-when-cross-origin).</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No se envía Referrer-Policy.</dd><dt>Recomendación técnica</dt><dd>Agrega &#x27;Referrer-Policy: strict-origin-when-cross-origin&#x27;.</dd><dt>Identificador</dt><dd><span class="code">headers.referrer</span></dd></dl></details></div></details><details class="finding" id="f-12" data-sev="INFO" style="--c:var(--sev-info);--cb:var(--sev-info-bg)"><summary><span class="sev">Informativo</span><span><span class="f-title">Sin security.txt</span><span class="f-cat"> · Archivos expuestos</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El sitio no publica un contacto para que investigadores reporten fallas de seguridad.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Si alguien encuentra un problema, no sabrá a quién avisar de forma responsable.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Publicar un archivo security.txt con un correo de contacto.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien desarrolla o mantiene el sitio web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No se encontró /.well-known/security.txt con un contacto.</dd><dt>Recomendación técnica</dt><dd>Publica un security.txt con un correo de contacto.</dd><dt>Identificador</dt><dd><span class="code">exposure.security_txt</span></dd></dl></details></div></details><details class="finding" id="f-13" data-sev="INFO" style="--c:var(--sev-info);--cb:var(--sev-info-bg)"><summary><span class="sev">Informativo</span><span><span class="f-title">Falta Permissions-Policy</span><span class="f-cat"> · Escudos del navegador</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El sitio no restringe qué funciones del dispositivo (cámara, micrófono, ubicación) puede usar la página.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Es una medida de orden: reduce el daño si algún script externo fuese comprometido.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Agregar la cabecera Permissions-Policy desactivando lo que el sitio no necesita.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>No se envía Permissions-Policy.</dd><dt>Recomendación técnica</dt><dd>Agrega Permissions-Policy desactivando las funciones que no uses.</dd><dt>Identificador</dt><dd><span class="code">headers.permissions</span></dd></dl></details></div></details></section>
+<section id="alcance"><h2>Alcance de este informe</h2>
+ <div class="scope">
+  <div class="card"><h3>Qué se revisó</h3><ul><li><b>headers</b>: Cabeceras de seguridad que protegen al visitante en el navegador.</li><li><b>transport</b>: Que el sitio obligue a usar la versión segura (HTTPS).</li><li><b>cookies</b>: Configuración de seguridad de las cookies de sesión.</li><li><b>cors</b>: Qué sitios externos pueden leer información de tu sitio.</li><li><b>content</b>: Formularios, scripts externos y datos sensibles en el código de la página.</li><li><b>tls</b>: Certificado digital y versión del cifrado del sitio.</li><li><b>dns</b>: Registros de correo (SPF, DMARC) y de certificados (CAA) del dominio.</li><li><b>exposure</b>: Archivos de configuración, respaldos o carpetas visibles por error.</li></ul></div>
+  <div class="card"><h3>Qué debes tener en cuenta</h3><ul><li>Fue un análisis pasivo: no se intentó vulnerar el sitio ni se enviaron ataques de prueba.</li><li>Es una fotografía del momento: el estado puede cambiar con cada actualización del sitio.</li><li>Un puntaje alto no garantiza que no existan vulnerabilidades; solo indica que lo revisado está bien.</li><li>No se revisó el código interno, la base de datos ni los sistemas de la empresa fuera del sitio.</li><li>El puntaje es una guía orientativa para priorizar, no una certificación.</li></ul></div>
+ </div></section>
+<section id="glosario"><h2>Glosario</h2><p class="sec-lead">Términos técnicos que aparecen en este informe, explicados en simple.</p><div class="gloss"><div><b>Certificado TLS</b>El &#x27;carnet de identidad&#x27; digital del sitio. Lo emite una entidad confiable y tiene fecha de vencimiento.</div><div><b>DMARC</b>Registro que indica qué hacer con los correos que no pasan las verificaciones de SPF/DKIM.</div><div><b>SPF</b>Registro del dominio que lista qué servidores pueden enviar correo con tu nombre.</div><div><b>Clickjacking</b>Engaño en el que el sitio se muestra invisible bajo otra página para que el usuario haga clic sin saberlo.</div><div><b>Cabecera</b>Mensajes que el servidor envía junto con la página para dar instrucciones al navegador.</div><div><b>CSP</b>Content-Security-Policy: lista de los orígenes desde los que el sitio permite cargar scripts y recursos.</div><div><b>XSS</b>Cross-Site Scripting: un atacante logra que la página ejecute código malicioso en el navegador de otras personas.</div><div><b>HSTS</b>Una orden al navegador: &#x27;con este sitio habla siempre por HTTPS&#x27;.</div><div><b>HTTPS</b>La versión segura de la web: cifra lo que viaja entre el visitante y el sitio (el candado del navegador).</div><div><b>Cookie</b>Pequeño dato que el sitio guarda en el navegador para recordar al visitante (por ejemplo, su sesión).</div><div><b>CSRF</b>Ataque que aprovecha que el usuario ya inició sesión para hacer acciones sin su consentimiento.</div><div><b>security.txt</b>Archivo público con el contacto para reportar fallas de seguridad.</div></div></section>
+<footer>Informe generado por Tu Nombre o Empresa el 9 de noviembre de 2026. Creado con report-generator v1.0.0.
+ Este documento es confidencial y está dirigido a Tienda Ejemplo SpA.</footer>
+</div></main>
+<script>
+(function(){
+  var t=document.querySelector('.tools'); if(t){t.hidden=false;}
+  var chips=[].slice.call(document.querySelectorAll('[data-filter]'));
+  var items=[].slice.call(document.querySelectorAll('details.finding'));
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    var f=c.getAttribute('data-filter');
+    chips.forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false');});
+    items.forEach(function(d){d.hidden=!(f==='ALL'||d.getAttribute('data-sev')===f);});
+  });});
+  var tog=document.getElementById('toggle-all'), open=false;
+  if(tog){tog.addEventListener('click',function(){
+    open=!open;
+    [].forEach.call(document.querySelectorAll('details.finding'),function(d){d.open=open;});
+    tog.textContent=open?'Contraer todo':'Expandir todo';
+  });}
+  var pr=document.getElementById('print-btn');
+  if(pr){pr.addEventListener('click',function(){
+    [].forEach.call(document.querySelectorAll('details'),function(d){d.open=true;});
+    window.print();
+  });}
+  function show(){
+    var id=location.hash.slice(1); if(!id){return;}
+    var el=document.getElementById(id);
+    if(el&&el.tagName==='DETAILS'){el.hidden=false;el.open=true;}
+  }
+  window.addEventListener('hashchange',show); show();
+})();
+</script>
+</body></html>

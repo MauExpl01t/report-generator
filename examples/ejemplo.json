@@ -1,0 +1,126 @@
+{
+  "target": "https://www.ejemplo.com/",
+  "started_at": "2026-11-09T14:02:11+00:00",
+  "finished_at": "2026-11-09T14:02:38+00:00",
+  "checks_run": ["headers", "transport", "cookies", "cors", "content", "tls", "dns", "exposure"],
+  "errors": [],
+  "findings": [
+    {
+      "check": "tls.expired",
+      "title": "Certificado TLS vencido",
+      "severity": "HIGH",
+      "description": "Venció el 2026-11-01.",
+      "recommendation": "Renueva el certificado.",
+      "evidence": "",
+      "reference": "https://developer.mozilla.org/es/docs/Web/Security/Transport_Layer_Security"
+    },
+    {
+      "check": "transport.no_redirect",
+      "title": "HTTP no redirige a HTTPS",
+      "severity": "MEDIUM",
+      "description": "http://www.ejemplo.com/ responde 200 sin redirigir a HTTPS.",
+      "recommendation": "Configura una redirección 301 de HTTP a HTTPS.",
+      "evidence": "GET http://www.ejemplo.com/ -> 200",
+      "reference": ""
+    },
+    {
+      "check": "headers.hsts",
+      "title": "Falta Strict-Transport-Security (HSTS)",
+      "severity": "MEDIUM",
+      "description": "La respuesta no incluye la cabecera Strict-Transport-Security.",
+      "recommendation": "Agrega 'Strict-Transport-Security: max-age=31536000; includeSubDomains'.",
+      "evidence": "",
+      "reference": "https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Strict-Transport-Security"
+    },
+    {
+      "check": "headers.csp",
+      "title": "Falta Content-Security-Policy (CSP)",
+      "severity": "MEDIUM",
+      "description": "No se envía Content-Security-Policy.",
+      "recommendation": "Define una CSP restrictiva que limite los orígenes de scripts y recursos.",
+      "evidence": "",
+      "reference": "https://developer.mozilla.org/es/docs/Web/HTTP/CSP"
+    },
+    {
+      "check": "headers.clickjacking",
+      "title": "Sin protección contra clickjacking",
+      "severity": "MEDIUM",
+      "description": "No hay X-Frame-Options ni frame-ancestors en la CSP.",
+      "recommendation": "Agrega X-Frame-Options: DENY o la directiva frame-ancestors 'none'.",
+      "evidence": "",
+      "reference": ""
+    },
+    {
+      "check": "dns.dmarc_missing",
+      "title": "Sin registro DMARC",
+      "severity": "MEDIUM",
+      "description": "No se encontró un registro TXT en _dmarc.ejemplo.com.",
+      "recommendation": "Publica un registro DMARC, comenzando con p=none y subiendo gradualmente.",
+      "evidence": "",
+      "reference": ""
+    },
+    {
+      "check": "cookies.httponly",
+      "title": "Cookie sin atributo HttpOnly",
+      "severity": "LOW",
+      "description": "La cookie 'sessionid' no tiene HttpOnly.",
+      "recommendation": "Agrega el atributo HttpOnly a las cookies de sesión.",
+      "evidence": "Set-Cookie: sessionid=...; Path=/",
+      "reference": ""
+    },
+    {
+      "check": "cookies.samesite",
+      "title": "Cookie sin atributo SameSite",
+      "severity": "LOW",
+      "description": "La cookie 'sessionid' no define SameSite.",
+      "recommendation": "Define SameSite=Lax o Strict.",
+      "evidence": "Set-Cookie: sessionid=...; Path=/",
+      "reference": ""
+    },
+    {
+      "check": "headers.nosniff",
+      "title": "Falta X-Content-Type-Options: nosniff",
+      "severity": "LOW",
+      "description": "No se envía X-Content-Type-Options.",
+      "recommendation": "Agrega 'X-Content-Type-Options: nosniff'.",
+      "evidence": "",
+      "reference": ""
+    },
+    {
+      "check": "headers.disclosure.server",
+      "title": "Divulgación de tecnología en Server",
+      "severity": "LOW",
+      "description": "La cabecera Server revela la tecnología y versión.",
+      "recommendation": "Oculta o genericiza la cabecera.",
+      "evidence": "Server: Apache/2.4.41 (Ubuntu)",
+      "reference": ""
+    },
+    {
+      "check": "headers.referrer",
+      "title": "Falta Referrer-Policy",
+      "severity": "LOW",
+      "description": "No se envía Referrer-Policy.",
+      "recommendation": "Agrega 'Referrer-Policy: strict-origin-when-cross-origin'.",
+      "evidence": "",
+      "reference": ""
+    },
+    {
+      "check": "exposure.security_txt",
+      "title": "Sin security.txt",
+      "severity": "INFO",
+      "description": "No se encontró /.well-known/security.txt con un contacto.",
+      "recommendation": "Publica un security.txt con un correo de contacto.",
+      "evidence": "",
+      "reference": ""
+    },
+    {
+      "check": "headers.permissions",
+      "title": "Falta Permissions-Policy",
+      "severity": "INFO",
+      "description": "No se envía Permissions-Policy.",
+      "recommendation": "Agrega Permissions-Policy desactivando las funciones que no uses.",
+      "evidence": "",
+      "reference": ""
+    }
+  ]
+}

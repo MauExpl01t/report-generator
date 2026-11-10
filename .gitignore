@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Informes y resultados reales de clientes: nunca subir a GitHub
+informe*.html
+informe*.pdf
+reporte*.html
+reporte*.pdf
+resultado*.json
+!examples/ejemplo.html
+!examples/ejemplo.pdf
+!examples/ejemplo.json

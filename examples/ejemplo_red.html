@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Informe de seguridad - 127.0.0.1</title>
+<style>
+:root{--bg:#f4f6fb;--surface:#ffffff;--surface-2:#eef2f9;--text:#0f172a;--muted:#55607a;--line:#e1e6f0;
+--link:#1d4ed8;--ok:#15803d;--ok-bg:#e3f4ea;
+--sev-critical:#991b1b;--sev-critical-bg:#fbdcdc;--sev-high:#c0262d;--sev-high-bg:#fde8e8;
+--sev-medium:#b45309;--sev-medium-bg:#ffedd5;--sev-low:#8a6a06;--sev-low-bg:#fef3c7;
+--sev-info:#475569;--sev-info-bg:#e8edf3;--shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);--accent:#2563eb;}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1020;--surface:#141b2e;--surface-2:#1a2340;--text:#e8edf8;--muted:#a0acc5;--line:#263150;
+--link:#8ab4ff;--ok:#4ade80;--ok-bg:#11301f;
+--sev-critical:#fca5a5;--sev-critical-bg:#4a1d1d;--sev-high:#f87171;--sev-high-bg:#43201f;
+--sev-medium:#fb923c;--sev-medium-bg:#43280f;--sev-low:#facc15;--sev-low-bg:#3b3210;
+--sev-info:#a9b6cc;--sev-info-bg:#1f2a3d;--shadow:0 1px 2px rgba(0,0,0,.4);}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--link)}
+h1,h2,h3,h4{line-height:1.25;margin:0}
+h2{font-size:1.3rem;margin-bottom:.35rem}
+.sec-lead{color:var(--muted);margin:0 0 1rem;max-width:70ch}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.top{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#000));color:#fff;padding:28px 0 32px}
+.top-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand img{max-height:48px;max-width:160px;background:#fff;border-radius:8px;padding:6px}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.top h1{font-size:clamp(1.5rem,3.5vw,2.2rem);margin-top:4px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;font-size:.92rem;opacity:.95}
+.meta b{font-weight:600}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:.88rem;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);
+border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn:hover{background:rgba(255,255,255,.28)}
+nav.sticky{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.sticky .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.sticky a{padding:12px 12px;text-decoration:none;color:var(--muted);font-size:.9rem;white-space:nowrap}
+nav.sticky a:hover{color:var(--text)}
+main{margin-top:24px;padding-bottom:40px}
+section{margin-top:28px;scroll-margin-top:56px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.hero{display:grid;grid-template-columns:300px 1fr;gap:16px}
+.gauge-card{text-align:center}
+.gauge{width:190px;height:190px}
+.g-track{fill:none;stroke:var(--line);stroke-width:12}
+.g-val{fill:none;stroke-width:12;stroke-linecap:round}
+.g-num{font-size:40px;font-weight:700;text-anchor:middle;fill:var(--text)}
+.g-sub{font-size:11px;text-anchor:middle;fill:var(--muted)}
+.grade{display:inline-block;margin-top:6px;padding:4px 14px;border-radius:999px;font-weight:700;color:#fff}
+.note{color:var(--muted);font-size:.82rem;margin:10px 0 0}
+.summary-card p{margin:.4rem 0}
+.urgent-list{margin:.6rem 0 0;padding-left:1.2rem}
+.urgent-list li{margin:.2rem 0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.kpi{padding:16px}
+.kpi .n{font-size:2rem;font-weight:700;line-height:1.1}
+.kpi .l{font-weight:600;margin-top:2px}
+.kpi .s{color:var(--muted);font-size:.84rem}
+.two{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:16px}
+.bar-row{display:grid;grid-template-columns:86px 1fr 28px;gap:10px;align-items:center;margin:10px 0;font-size:.92rem}
+.bar{height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px}
+.bar-n{text-align:right;font-weight:600}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.cat{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.cat svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cat-h{display:flex;gap:8px;align-items:center;font-weight:600;font-size:.95rem}
+.cat p{color:var(--muted);font-size:.8rem;margin:6px 0 8px}
+.pill{display:inline-block;font-size:.76rem;font-weight:600;border-radius:999px;padding:2px 10px}
+.pill.ok{color:var(--ok);background:var(--ok-bg)}
+.pill.na{color:var(--sev-info);background:var(--sev-info-bg)}
+.good{display:flex;flex-wrap:wrap;gap:8px}
+.good .pill{font-size:.86rem;padding:5px 12px}
+.plan{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.plan-col{border-top:5px solid var(--c);padding:16px}
+.plan-col h3{font-size:1.05rem}
+.plan-col h3 small{display:block;color:var(--muted);font-weight:400;font-size:.8rem}
+.plan-col ol{margin:.8rem 0 0;padding:0;list-style:none}
+.plan-col li{padding:10px 0;border-top:1px solid var(--line)}
+.plan-col li:first-child{border-top:0}
+.plan-col a{font-weight:600;text-decoration:none}
+.plan-col a:hover{text-decoration:underline}
+.empty{color:var(--muted);font-size:.9rem;margin:.8rem 0 0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:.74rem;color:var(--muted);background:var(--surface-2);border-radius:6px;padding:2px 8px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.chip{font:inherit;font-size:.86rem;border:1px solid var(--line);background:var(--surface);color:var(--text);
+border-radius:999px;padding:5px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--text);color:var(--bg);border-color:var(--text)}
+details.finding{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);
+border-radius:12px;margin:10px 0;box-shadow:var(--shadow)}
+details.finding>summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px}
+details.finding>summary::-webkit-details-marker{display:none}
+details.finding>summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2px solid var(--muted);
+border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .15s;flex:none}
+details.finding[open]>summary::after{transform:rotate(-135deg)}
+.sev{flex:none;font-size:.76rem;font-weight:700;border-radius:6px;padding:3px 9px;color:var(--c);background:var(--cb)}
+.f-title{font-weight:600}
+.f-cat{color:var(--muted);font-size:.8rem;margin-left:4px}
+.f-body{padding:0 16px 16px}
+.f-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.f-block{background:var(--surface-2);border-radius:10px;padding:12px 14px}
+.f-block h4{font-size:.84rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.f-block p{margin:0;font-size:.95rem}
+.f-block.fix{background:var(--ok-bg)}
+.f-block.fix h4{color:var(--ok)}
+details.tech{margin-top:12px;border:1px dashed var(--line);border-radius:10px;padding:8px 14px}
+details.tech summary{cursor:pointer;font-size:.88rem;color:var(--muted)}
+details.tech dl{margin:10px 0 0;font-size:.9rem}
+details.tech dt{font-weight:600;margin-top:8px}
+details.tech dd{margin:2px 0 0}
+pre{background:var(--surface-2);padding:10px;border-radius:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;margin:0;font-size:.84rem}
+.code{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;color:var(--muted)}
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.scope ul{margin:.5rem 0 0;padding-left:1.2rem}
+.scope li{margin:.35rem 0;font-size:.94rem}
+.warn{border-left:5px solid var(--sev-medium);background:var(--sev-medium-bg);border-radius:10px;padding:10px 14px;margin-top:14px;font-size:.9rem}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.gloss div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.9rem}
+.gloss b{display:block}
+footer{margin-top:36px;padding:20px 0 40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+@media screen and (max-width:900px){
+ .hero,.two,.scope{grid-template-columns:1fr}
+ .kpis{grid-template-columns:repeat(2,1fr)}
+ .plan,.f-grid{grid-template-columns:1fr}
+}
+@page{size:A4;margin:10mm}
+@media print{
+ :root{--bg:#f4f6fb;--surface:#ffffff;--surface-2:#eef2f9;--text:#0f172a;--muted:#55607a;--line:#e1e6f0;
+--link:#1d4ed8;--ok:#15803d;--ok-bg:#e3f4ea;
+--sev-critical:#991b1b;--sev-critical-bg:#fbdcdc;--sev-high:#c0262d;--sev-high-bg:#fde8e8;
+--sev-medium:#b45309;--sev-medium-bg:#ffedd5;--sev-low:#8a6a06;--sev-low-bg:#fef3c7;
+--sev-info:#475569;--sev-info-bg:#e8edf3;--shadow:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.05);}
+ body{background:#fff;font-size:12px}
+ .hero{grid-template-columns:230px 1fr}
+ .two{grid-template-columns:260px 1fr}
+ .gauge{width:150px;height:150px}
+ .cats{grid-template-columns:repeat(2,1fr)}
+ .f-block p{font-size:.9rem}
+ .tools,nav.sticky,.filters{display:none!important}
+ .top{padding-bottom:24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ main{margin-top:12px}
+ .card,details.finding{box-shadow:none}
+ .kpi,.cat,details.finding,.plan-col li,.gloss div,.bar-row{break-inside:avoid}
+ h2,h3{break-after:avoid}
+ .plan{break-inside:avoid}
+ .f-body{padding:0 12px 12px}
+ details.finding>summary{padding:10px 12px}
+ details.tech dt{margin-top:4px}
+ details.tech{margin-top:8px;padding:6px 12px}
+ details.finding{margin:8px 0}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ section{margin-top:20px}
+}
+</style></head>
+<body>
+<header class="top"><div class="wrap">
+ <div class="top-row">
+  <div class="brand"><div><div class="eyebrow">Informe de seguridad de red</div><h1>127.0.0.1</h1></div></div>
+  <div class="tools" hidden><button class="btn" id="toggle-all" type="button">Expandir todo</button>
+  <button class="btn" id="print-btn" type="button">Imprimir / guardar PDF</button></div>
+ </div>
+ <div class="meta"><span><b>Cliente:</b> Laboratorio de práctica</span><span><b>Equipos:</b> 127.0.0.1</span><span><b>Fecha:</b> 10 de noviembre de 2026</span><span><b>Preparado por:</b> Tu Nombre o Empresa</span></div>
+</div></header>
+<nav class="sticky" aria-label="Secciones"><div class="wrap">
+ <a href="#resumen">Resumen</a><a href="#plan">Plan de acción</a><a href="#hallazgos">Hallazgos</a>
+ <a href="#alcance">Alcance</a><a href="#glosario">Glosario</a>
+</div></nav>
+<main><div class="wrap">
+<section id="resumen" style="margin-top:0">
+ <div class="hero">
+  <div class="card gauge-card"><svg class="gauge" viewBox="0 0 140 140" role="img" aria-label="Puntaje 0 de 100"><circle class="g-track" cx="70" cy="70" r="54"/><circle class="g-val" cx="70" cy="70" r="54" transform="rotate(-90 70 70)" style="stroke:var(--sev-critical);stroke-dasharray:339.3;stroke-dashoffset:339.3"/><text class="g-num" x="70" y="76">0</text><text class="g-sub" x="70" y="94">de 100</text></svg>
+   <div><span class="grade" style="background:var(--sev-critical)">Crítico</span></div>
+   <p class="note">Puntaje de seguridad, de 0 a 100. Es orientativo y sirve para priorizar.</p></div>
+  <div class="card summary-card"><h2>Resumen para la gerencia</h2>
+   <p>Realizamos un escaneo de red: revisamos qué puertos y servicios responden en los equipos, sin intentar vulnerarlos ni entrar en ellos sobre <b>127.0.0.1</b>. El resultado general es <b>crítico</b> (0/100). Hay problemas graves que deben corregirse de inmediato.</p><p>Detectamos <b>8 puntos</b> a revisar, de los cuales <b>4</b> son urgentes. Buena noticia: <b>6</b> se pueden resolver en pocos minutos.</p><p style="margin-top:.8rem"><b>Lo primero que hay que atender:</b></p><ul class="urgent-list"><li>Redis abierto sin contraseña (127.0.0.1:6379/tcp)</li><li>VNC permite conectarse sin contraseña (127.0.0.1:5900/tcp)</li><li>El servidor FTP permite entrar sin usuario ni contraseña (127.0.0.1:2121/tcp)</li></ul></div>
+ </div>
+ <div class="kpis">
+  <div class="card kpi"><div class="n">8</div><div class="l">Puntos a revisar</div><div class="s">en total, de todas las severidades</div></div>
+  <div class="card kpi"><div class="n" style="color:var(--sev-critical)">4</div><div class="l">Urgentes</div><div class="s">severidad crítica o alta</div></div>
+  <div class="card kpi"><div class="n">6</div><div class="l">Arreglos rápidos</div><div class="s">se resuelven en minutos</div></div>
+  <div class="card kpi"><div class="n">21</div><div class="l">Controles ejecutados</div><div class="s">áreas de seguridad revisadas</div></div>
+ </div>
+</section>
+<section>
+ <div class="two">
+  <div class="card"><h2>Por severidad</h2><p class="sec-lead">Cuántos puntos hay según qué tan grave es cada uno.</p><div class="bar-row"><span>Crítica</span><div class="bar"><i style="width:100%;background:var(--sev-critical)"></i></div><span class="bar-n">2</span></div><div class="bar-row"><span>Alta</span><div class="bar"><i style="width:100%;background:var(--sev-high)"></i></div><span class="bar-n">2</span></div><div class="bar-row"><span>Media</span><div class="bar"><i style="width:50%;background:var(--sev-medium)"></i></div><span class="bar-n">1</span></div><div class="bar-row"><span>Baja</span><div class="bar"><i style="width:100%;background:var(--sev-low)"></i></div><span class="bar-n">2</span></div><div class="bar-row"><span>Informativo</span><div class="bar"><i style="width:50%;background:var(--sev-info)"></i></div><span class="bar-n">1</span></div></div>
+  <div class="card"><h2>Por área</h2><p class="sec-lead">Estado de cada área de seguridad revisada.</p><div class="cats"><div class="cat"><div class="cat-h" style="color:var(--sev-critical)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h8"/></svg><span style="color:var(--text)">Puertas de red (puertos)</span></div><p>Qué servicios de tus equipos quedan visibles desde la red y si alguno no debería estarlo.</p><div class="bar" style="margin-bottom:8px"><i style="width:0%;background:var(--sev-critical)"></i></div><span class="pill" style="color:var(--sev-critical);background:var(--sev-critical-bg)">8 puntos a revisar</span></div></div></div>
+ </div>
+</section>
+
+<section id="plan"><h2>Plan de acción</h2>
+ <p class="sec-lead">Qué corregir y en qué orden. Dentro de cada grupo, lo más rápido de resolver va primero.
+ Haz clic en un punto para ver su explicación.</p>
+ <div class="plan"><div class="card plan-col" style="--c:var(--sev-critical)"><h3>Urgente<small>esta semana</small></h3><ol><li><a href="#f-1">Redis abierto sin contraseña (127.0.0.1:6379/tcp)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></li><li><a href="#f-2">VNC permite conectarse sin contraseña (127.0.0.1:5900/tcp)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></li><li><a href="#f-4">Memcached accesible sin autenticación (127.0.0.1:11211/tcp)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></li><li><a href="#f-3">El servidor FTP permite entrar sin usuario ni contraseña (127.0.0.1:2121/tcp)</a><div class="tags"><span class="tag">Moderado · horas</span><span class="tag">Equipo técnico / proveedor web</span></div></li></ol></div><div class="card plan-col" style="--c:var(--sev-medium)"><h3>Importante<small>durante este mes</small></h3><ol><li><a href="#f-5">El servidor permite métodos HTTP poco comunes (127.0.0.1:8080/tcp)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li></ol></div><div class="card plan-col" style="--c:var(--sev-info)"><h3>Mejora continua<small>cuando haya oportunidad</small></h3><ol><li><a href="#f-6">El servidor web revela su versión (127.0.0.1:8080/tcp)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></li><li><a href="#f-7">Versión de OpenSSH muy antigua (127.0.0.1:2222/tcp)</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></li><li><a href="#f-8">Puertos abiertos en 127.0.0.1</a><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></li></ol></div></div></section>
+<section id="hallazgos"><h2>Detalle de hallazgos</h2>
+ <p class="sec-lead">Cada punto explica qué significa, por qué importa y cómo se corrige, sin tecnicismos.
+ El detalle técnico está al final de cada uno, para quien lo implemente.</p>
+ <div class="filters" role="group" aria-label="Filtrar por severidad"><button class="chip" data-filter="ALL" aria-pressed="true">Todos (8)</button><button class="chip" data-filter="CRITICAL" aria-pressed="false">Crítica (2)</button><button class="chip" data-filter="HIGH" aria-pressed="false">Alta (2)</button><button class="chip" data-filter="MEDIUM" aria-pressed="false">Media (1)</button><button class="chip" data-filter="LOW" aria-pressed="false">Baja (2)</button><button class="chip" data-filter="INFO" aria-pressed="false">Informativo (1)</button></div>
+ <details class="finding" id="f-1" data-sev="CRITICAL" style="--c:var(--sev-critical);--cb:var(--sev-critical-bg)"><summary><span class="sev">Crítica</span><span><span class="f-title">Redis abierto sin contraseña (127.0.0.1:6379/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Un servicio responde sin pedir usuario ni contraseña, como una oficina donde cualquiera entra y se sirve.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Cualquiera que llegue hasta el puerto puede leer, modificar o borrar datos, y en varios casos tomar el control del servidor.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Activar la autenticación del servicio, limitar a qué equipos escucha y bloquear su puerto en el firewall.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Cualquiera que llegue a este puerto puede leer, borrar o modificar todos los datos de Redis, y en muchos casos conseguir control del servidor.</dd><dt>Evidencia</dt><dd><pre>PING → +PONG sin autenticación</pre></dd><dt>Recomendación técnica</dt><dd>Activa &#x27;requirepass&#x27; (o ACLs), limita &#x27;bind&#x27; a 127.0.0.1 o a la red interna y bloquea el puerto 6379 en el firewall.</dd><dt>Más información</dt><dd><a href="https://redis.io/docs/latest/operate/oss_and_stack/management/security/" rel="noopener noreferrer" target="_blank">https://redis.io/docs/latest/operate/oss_and_stack/management/security/</a></dd><dt>Identificador</dt><dd><span class="code">ports.script.redis-noauth</span></dd></dl></details></div></details><details class="finding" id="f-2" data-sev="CRITICAL" style="--c:var(--sev-critical);--cb:var(--sev-critical-bg)"><summary><span class="sev">Crítica</span><span><span class="f-title">VNC permite conectarse sin contraseña (127.0.0.1:5900/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Un servicio responde sin pedir usuario ni contraseña, como una oficina donde cualquiera entra y se sirve.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Cualquiera que llegue hasta el puerto puede leer, modificar o borrar datos, y en varios casos tomar el control del servidor.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Activar la autenticación del servicio, limitar a qué equipos escucha y bloquear su puerto en el firewall.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Cualquiera que llegue a este puerto puede ver y controlar el escritorio del equipo.</dd><dt>Evidencia</dt><dd><pre>tipo de seguridad 1 (None) ofrecido</pre></dd><dt>Recomendación técnica</dt><dd>Configura una contraseña (o mejor, usa un túnel SSH/VPN) y bloquea el puerto 5900 en el firewall.</dd><dt>Identificador</dt><dd><span class="code">ports.script.vnc-noauth</span></dd></dl></details></div></details><details class="finding" id="f-3" data-sev="HIGH" style="--c:var(--sev-high);--cb:var(--sev-high-bg)"><summary><span class="sev">Alta</span><span><span class="f-title">El servidor FTP permite entrar sin usuario ni contraseña (127.0.0.1:2121/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>FTP es un método antiguo para subir y bajar archivos que no cifra nada, ni siquiera la contraseña.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Las claves y archivos pueden ser interceptados, y los servidores FTP suelen quedar mal configurados.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Cambiar a SFTP o FTPS (versiones cifradas) y limitar quién puede conectarse.</p><div class="tags"><span class="tag">Moderado · horas</span><span class="tag">Equipo técnico / proveedor web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Cualquier persona puede conectarse como &#x27;anonymous&#x27; y ver (y a veces subir) archivos sin tener una cuenta.</dd><dt>Evidencia</dt><dd><pre>USER anonymous → 230 Login successful</pre></dd><dt>Recomendación técnica</dt><dd>Desactiva el acceso anónimo en la configuración del FTP o, mejor, reemplaza FTP por SFTP.</dd><dt>Identificador</dt><dd><span class="code">ports.script.ftp-anonymous</span></dd></dl></details></div></details><details class="finding" id="f-4" data-sev="HIGH" style="--c:var(--sev-high);--cb:var(--sev-high-bg)"><summary><span class="sev">Alta</span><span><span class="f-title">Memcached accesible sin autenticación (127.0.0.1:11211/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Un servicio responde sin pedir usuario ni contraseña, como una oficina donde cualquiera entra y se sirve.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Cualquiera que llegue hasta el puerto puede leer, modificar o borrar datos, y en varios casos tomar el control del servidor.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Activar la autenticación del servicio, limitar a qué equipos escucha y bloquear su puerto en el firewall.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Cualquiera puede leer o borrar la caché y, si también responde por UDP, el servidor puede ser usado para ataques de amplificación contra terceros.</dd><dt>Evidencia</dt><dd><pre>stats → STAT ...</pre></dd><dt>Recomendación técnica</dt><dd>Haz que escuche solo en 127.0.0.1 o en la red interna, desactiva UDP (-U 0) y bloquea el puerto 11211.</dd><dt>Identificador</dt><dd><span class="code">ports.script.memcached-open</span></dd></dl></details></div></details><details class="finding" id="f-5" data-sev="MEDIUM" style="--c:var(--sev-medium);--cb:var(--sev-medium-bg)"><summary><span class="sev">Media</span><span><span class="f-title">El servidor permite métodos HTTP poco comunes (127.0.0.1:8080/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El servidor web muestra información de más: qué programa y versión usa, o métodos poco habituales.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Esa información facilita buscar fallos conocidos para esa versión exacta.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Ocultar la versión en la configuración y deshabilitar los métodos HTTP que no se usan.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Métodos como PUT o DELETE pueden permitir subir o borrar archivos y TRACE ayuda a robar datos en ciertos ataques.</dd><dt>Evidencia</dt><dd><pre>Allow: GET, POST, PUT, DELETE, TRACE</pre></dd><dt>Recomendación técnica</dt><dd>Desactiva los métodos que la aplicación no necesita y deja solo GET, HEAD y POST.</dd><dt>Identificador</dt><dd><span class="code">ports.script.http-risky-methods</span></dd></dl></details></div></details><details class="finding" id="f-6" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">El servidor web revela su versión (127.0.0.1:8080/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El servidor web muestra información de más: qué programa y versión usa, o métodos poco habituales.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Esa información facilita buscar fallos conocidos para esa versión exacta.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Ocultar la versión en la configuración y deshabilitar los métodos HTTP que no se usan.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Quien administra el hosting o servidor</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>El servidor muestra qué programa y qué versión usa. Un atacante puede buscar fallos conocidos de esa versión.</dd><dt>Evidencia</dt><dd><pre>server: Apache/2.2.15 (CentOS); x-powered-by: PHP/5.3.3</pre></dd><dt>Recomendación técnica</dt><dd>Oculta la versión en la configuración (por ejemplo &#x27;server_tokens off&#x27; en nginx o &#x27;ServerTokens Prod&#x27; en Apache).</dd><dt>Identificador</dt><dd><span class="code">ports.script.http-version-disclosure</span></dd></dl></details></div></details><details class="finding" id="f-7" data-sev="LOW" style="--c:var(--sev-low);--cb:var(--sev-low-bg)"><summary><span class="sev">Baja</span><span><span class="f-title">Versión de OpenSSH muy antigua (127.0.0.1:2222/tcp)</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>El servicio de acceso remoto SSH usa una versión del protocolo o del programa que está obsoleta.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Las versiones viejas tienen fallos públicos y algoritmos débiles.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Actualizar OpenSSH y dejar solo el protocolo 2.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Las versiones anteriores a la 7.4 tienen vulnerabilidades públicas y usan algoritmos débiles.</dd><dt>Evidencia</dt><dd><pre>OpenSSH_7.2p2</pre></dd><dt>Recomendación técnica</dt><dd>Actualiza OpenSSH a una versión soportada por tu sistema operativo.</dd><dt>Identificador</dt><dd><span class="code">ports.script.ssh-old-version</span></dd></dl></details></div></details><details class="finding" id="f-8" data-sev="INFO" style="--c:var(--sev-info);--cb:var(--sev-info-bg)"><summary><span class="sev">Informativo</span><span><span class="f-title">Puertos abiertos en 127.0.0.1</span><span class="f-cat"> · Puertas de red (puertos)</span></span></summary><div class="f-body"><div class="f-grid"><div class="f-block"><h4>¿Qué significa?</h4><p>Lista de las &#x27;puertas&#x27; de red que están abiertas en este equipo y qué programa atiende cada una.</p></div><div class="f-block"><h4>¿Por qué importa?</h4><p>Sirve como inventario: conviene confirmar que cada servicio abierto es necesario y está actualizado.</p></div><div class="f-block fix"><h4>¿Cómo se arregla?</h4><p>Revisar la lista y cerrar lo que no se use.</p><div class="tags"><span class="tag">Rápido · minutos</span><span class="tag">Equipo técnico / proveedor web</span></div></div></div><details class="tech"><summary>Detalle técnico (para quien implementa)</summary><dl><dt>Lo que detectó el análisis</dt><dd>Puertos abiertos encontrados: 2121/tcp ftp, 2222/tcp ssh, 5900/tcp vnc, 6379/tcp redis, 8080/tcp http, 11211/tcp memcached.</dd><dt>Evidencia</dt><dd><pre>2121/tcp ftp, 2222/tcp ssh, 5900/tcp vnc, 6379/tcp redis, 8080/tcp http, 11211/tcp memcached</pre></dd><dt>Recomendación técnica</dt><dd>Revisa que cada servicio abierto sea necesario y esté actualizado.</dd><dt>Identificador</dt><dd><span class="code">ports.inventory</span></dd></dl></details></div></details></section>
+<section id="alcance"><h2>Alcance de este informe</h2>
+ <div class="scope">
+  <div class="card"><h3>Qué se revisó</h3><ul><li><b>host-discovery</b>: Qué equipos de la red están encendidos y responden.</li><li><b>tcp-connect</b>: Qué puertos TCP (puertas de red) tiene abiertos cada equipo.</li><li><b>service-detection</b>: Qué programa y qué versión hay detrás de cada puerto abierto.</li><li><b>script:banner</b>: Chequeo adicional.</li><li><b>script:dns-recursion</b>: Chequeo adicional.</li><li><b>script:docker-api-exposed</b>: Chequeo adicional.</li><li><b>script:elasticsearch-open</b>: Chequeo adicional.</li><li><b>script:ftp-anon</b>: Chequeo adicional.</li><li><b>script:http-headers</b>: Chequeo adicional.</li><li><b>script:http-methods</b>: Chequeo adicional.</li><li><b>script:http-title</b>: Chequeo adicional.</li><li><b>script:memcached-open</b>: Chequeo adicional.</li><li><b>script:mongodb-noauth</b>: Chequeo adicional.</li><li><b>script:redis-noauth</b>: Chequeo adicional.</li><li><b>script:smb-v1</b>: Chequeo adicional.</li><li><b>script:smtp-commands</b>: Chequeo adicional.</li><li><b>script:snmp-public</b>: Chequeo adicional.</li><li><b>script:ssh-protocol</b>: Chequeo adicional.</li><li><b>script:ssl-cert</b>: Chequeo adicional.</li><li><b>script:ssl-weak-protocols</b>: Chequeo adicional.</li><li><b>script:vnc-noauth</b>: Chequeo adicional.</li></ul></div>
+  <div class="card"><h3>Qué debes tener en cuenta</h3><ul><li>Es una fotografía del momento: los puertos abiertos pueden cambiar cuando se enciende, apaga o actualiza un servicio.</li><li>Solo se revisó lo visible desde donde se hizo el escaneo; un puerto cerrado aquí puede estar abierto para otras redes (y al revés).</li><li>No se probaron contraseñas ni se intentó entrar a los servicios: solo se detectó qué hay y si está expuesto.</li><li>El puntaje es una guía orientativa para priorizar, no una certificación.</li></ul></div>
+ </div></section>
+<section id="glosario"><h2>Glosario</h2><p class="sec-lead">Términos técnicos que aparecen en este informe, explicados en simple.</p><div class="gloss"><div><b>Puerto</b>Una &#x27;puerta&#x27; numerada de un equipo en la red. Cada servicio (web, correo, acceso remoto) atiende en su propia puerta.</div><div><b>Firewall</b>Cortafuegos: filtra qué conexiones pueden entrar o salir de un equipo o de una red.</div></div></section>
+<footer>Informe generado por Tu Nombre o Empresa el 10 de noviembre de 2026. Creado con report-generator v1.0.0.
+ Este documento es confidencial y está dirigido a Laboratorio de práctica.</footer>
+</div></main>
+<script>
+(function(){
+  var t=document.querySelector('.tools'); if(t){t.hidden=false;}
+  var chips=[].slice.call(document.querySelectorAll('[data-filter]'));
+  var items=[].slice.call(document.querySelectorAll('details.finding'));
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    var f=c.getAttribute('data-filter');
+    chips.forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false');});
+    items.forEach(function(d){d.hidden=!(f==='ALL'||d.getAttribute('data-sev')===f);});
+  });});
+  var tog=document.getElementById('toggle-all'), open=false;
+  if(tog){tog.addEventListener('click',function(){
+    open=!open;
+    [].forEach.call(document.querySelectorAll('details.finding'),function(d){d.open=open;});
+    tog.textContent=open?'Contraer todo':'Expandir todo';
+  });}
+  var pr=document.getElementById('print-btn');
+  if(pr){pr.addEventListener('click',function(){
+    [].forEach.call(document.querySelectorAll('details'),function(d){d.open=true;});
+    window.print();
+  });}
+  function show(){
+    var id=location.hash.slice(1); if(!id){return;}
+    var el=document.getElementById(id);
+    if(el&&el.tagName==='DETAILS'){el.hidden=false;el.open=true;}
+  }
+  window.addEventListener('hashchange',show); show();
+})();
+</script>
+</body></html>
