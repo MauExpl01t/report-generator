@@ -1,6 +1,6 @@
 # report-generator
 
-![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![Licencia](https://img.shields.io/badge/licencia-MIT-green) ![Dependencias](https://img.shields.io/badge/dependencias-0-brightgreen)
+![Tests](https://github.com/MauExpl01t/report-generator/actions/workflows/tests.yml/badge.svg) ![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![Licencia](https://img.shields.io/badge/licencia-MIT-green) ![Dependencias](https://img.shields.io/badge/dependencias-0-brightgreen)
 
 Convierte el resultado de un escaneo de seguridad (JSON) en un **informe tipo dashboard**, explicado en lenguaje
 simple para que el cliente final entienda qué pasa, por qué importa y cómo se arregla.
